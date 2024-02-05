@@ -41,7 +41,10 @@ const Main = () => {
       </Column>
     </div>
     <div>
+      
+  
       <Col><h3 className='stake'>My Stakes</h3></Col>
+      
     </div>
 
     
