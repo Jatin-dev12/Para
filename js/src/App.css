@@ -10,22 +10,10 @@
 img.d-inline-block.align-top{
   margin-left: 20px;
 }
-.nav-item {
-  float: none;
+a.nav-link{
+  color: #007bff;
+  margin-right: 50px;
 }
-
-.nav-link {
-  float: none;
-}
-
-.navbar-brand {
-  float: none;
-}
-
-.navbar-collapse {
-  float: none;
-}
-
 .nav-item{
   margin-right: 10px;
 }
@@ -45,7 +33,7 @@ a.btn.btn-primary {
   flex-direction: column;
   background-color: white;
     box-sizing: border-box;
-  box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.1);
+  
 }
 
 .b{
@@ -56,11 +44,13 @@ a.btn.btn-primary {
 .App {
   padding-top: 50px;
 }
-.column.shadow {
+.column.jatin {
   height: 25px;
   margin-right: 60px;
   margin-left: 10px;
   border-radius: 10px;
+  
+
 }
 h2.yup {
   margin-left: 5px;
@@ -95,6 +85,21 @@ h3.stake {
   font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
 
 }
-button.chk.btn.btn-primary {
+button.chk.btn.btn-primary.btn-lg {
   float: right;
+}
+button.wlt.btn.btn-primary{
+  margin: 50px;
+  float: right;
+}
+
+/* @media (min-width: 374px){
+  h3.stake{
+    margin-top: 110px;
+  }
+} */
+@media (max-width: 976px){
+  h3.stake{
+    margin-top: 110px;
+  }
 }
