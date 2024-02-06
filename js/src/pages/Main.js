@@ -55,6 +55,17 @@ const Main = () => {
     <>
     <div className="App">
       <Column  className="" width="75%" jatin>
+      {accountAddress && (
+          <p className="box-shadow"> Wallet Address: {accountAddress.substring(0, 10)}...{accountAddress.slice(-10)} <span>
+          <button onClick={handleDisconnect} className='lll'>
+          DISCONNECTS
+        </button>
+         </span>
+         <span></span>
+         </p>
+          )}
+        
+        
       <h2 className='yup'>Stake BUY Tokens
 </h2> 
 <Container>
