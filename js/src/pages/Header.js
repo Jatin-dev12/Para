@@ -4,6 +4,8 @@ import { Nav, Navbar, Button} from 'react-bootstrap';
 import '../../src/App.css';
 import {PeraWalletConnect} from "@perawallet/connect"
 import Logo from './logo.png'
+import { useNavigate } from 'react-router-dom';
+
 
 const peraWallet = new PeraWalletConnect({
   shouldShowSignTxnToast: false,
@@ -43,6 +45,7 @@ function Header() {
     
   return (
     
+    
     <Navbar bg="primary" data-bs-theme="dark">
     <Container fluid>
       
@@ -62,7 +65,7 @@ function Header() {
         <Nav className="justify-content-end">   
         <Nav.Link href="/">Home</Nav.Link>
         <Nav.Link href="/pera">Pera</Nav.Link>
-        <Button onClick={handleConnectWalletClick} variant="light" >Connect Wallet</Button>
+        <Button onClick={handleConnectWalletClick}  variant="light" >Connect Wallet</Button>
           
        
 
