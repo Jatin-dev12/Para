@@ -96,6 +96,7 @@ button.wlt.btn.btn-primary{
 .lll{
   color: red;
     background: white;
+    -webkit-text-stroke-width: thin;
     border: none;
 }
 p.box-shadow {
