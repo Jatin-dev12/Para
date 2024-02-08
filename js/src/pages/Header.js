@@ -15,9 +15,11 @@ const peraWallet = new PeraWalletConnect({
 
 
 function Header() {
-  
-  const [algoAmount, setAlgoAmount] = useState(0);
+  const navigate = useNavigate();
+
   const [buyAmount, setBuyAmount] = useState(0);
+  const [algoAmount, setAlgoAmount] = useState(0);
+
   const [showAddress, setShowAddress] = useState(false);
   const [accountAddress, setAccountAddress] = useState(null);
   
@@ -26,17 +28,6 @@ function Header() {
     if (storedAccountAddress) {
       setAccountAddress(storedAccountAddress);
       setShowAddress(true);
-    }
-
-    const getAccountData = async () => {
-      const algoBalance = await peraWallet.getAlgoBalance(storedAccountAddress);
-      const buyBalance = await peraWallet.getTokenBalance(storedAccountAddress, 'buy');
-      setAlgoAmount(algoBalance);
-      setBuyAmount(buyBalance);
-    };
-
-    if (accountAddress) {
-      getAccountData();
     }
 
     return () => {
@@ -51,6 +42,9 @@ function Header() {
       setAccountAddress(accounts[0]);
       localStorage.setItem('accountAddress', accounts[0]);
       setShowAddress(true);
+      setTimeout(() => {
+        navigate('main', { replace: true });
+      }, 1000);
     } catch (error) {
       if (error?.data?.type !== 'CONNECT_MODAL_CLOSED') {
         console.error(error);
