@@ -21,8 +21,12 @@ const Main = () => {
   const [accountAddress, setAccountAddress] = useState(null);
   const [buyAmount, setBuyAmount] = useState(0);
   const [algoAmount, setAlgoAmount] = useState(0);
+  const [error, setError] = useState();
+
 
   useEffect(() => {
+    
+    
     const storedAccountAddress = localStorage.getItem('accountAddress');
     if (storedAccountAddress) {
       setAccountAddress(storedAccountAddress);
@@ -32,29 +36,56 @@ const Main = () => {
       peraWallet.connector?.off('disconnect', handleDisconnect);
     };
   }, []);
-
+  
   const handleConnect = async () => {
     try {
       const accounts = await peraWallet.connect();
-      peraWallet.connector?.on('disconnect', handleDisconnect);
+      peraWallet.connector?.on("disconnect", handleDisconnect);
       setAccountAddress(accounts[0]);
-      localStorage.setItem('accountAddress', accounts[0]);
+      localStorage.setItem("accountAddress", accounts[0]);
   
-      const assets = await peraWallet.getAssets();
-      const algoAsset = assets.find(asset => asset.name === "ALGO");
-      const algoBalance = await peraWallet.getAssetBalance(accounts, algoAsset.asset_id);
-      setAlgoAmount(algoBalance);
+      const algoAmount = parseFloat(await peraWallet.getAssetAmount(accounts, "544646112"));
+      setAlgoAmount(algoAmount);
   
       const buyAsset = await peraWallet.getToken("buy"); // BUY token object
-      const buyBalance = await peraWallet.getAssetBalance(accounts, buyAsset.asset_id);
-      setBuyAmount(buyBalance);
+      const buyAmount = parseFloat(await peraWallet.getAssetAmount(accounts, buyAsset.asset_id));
+      setBuyAmount(buyAmount);
   
     } catch (error) {
-      if (error?.data?.type !== 'CONNECT_MODAL_CLOSED') {
+      if (error?.data?.type !== "CONNECT_MODAL_CLOSED") {
         console.error(error);
       }
     }
   };
+  
+  // Add this useEffect hook to log the algoAmount state after it is updated
+  useEffect(() => {
+    console.log("Algo Amount:", algoAmount);
+    console.log("Buy Amount :", buyAmount);
+  }, [algoAmount]);
+
+  // const handleConnect = async () => {
+  //   try {
+  //     const accounts = await peraWallet.connect();
+  //     peraWallet.connector?.on('disconnect', handleDisconnect);
+  //     setAccountAddress(accounts[0]);
+  //     localStorage.setItem('accountAddress', accounts[0]);
+  
+  //     const assets = await peraWallet.getAssets();
+  //     const algoAsset = assets.find(asset => asset.name === "ALGO");
+  //     const algoAmount = await peraWallet.getAssetAmount(accounts, algoAsset.asset_id);
+  //     setAlgoAmount(algoAmount);
+  
+  //     const buyAsset = await peraWallet.getToken("buy"); // BUY token object
+  //     const buyAmount = await peraWallet.getAssetAmount(accounts, buyAsset.asset_id);
+  //     setBuyAmount(buyAmount);
+
+  //   } catch (error) {
+  //     if (error?.data?.type !== 'CONNECT_MODAL_CLOSED') {
+  //       console.error(error);
+  //     }
+  //   }
+  // };
 
   const handleDisconnect = () => {
     peraWallet.disconnect();
@@ -63,7 +94,7 @@ const Main = () => {
   };
 
   const handleConnectWalletClick = () => {
-    if (accountAddress) {
+    if (accountAddress , buyAmount,algoAmount) {
       handleDisconnect();
     } else {
       handleConnect();

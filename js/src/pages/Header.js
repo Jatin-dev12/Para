@@ -5,6 +5,7 @@ import { Route,Router,Routes } from 'react-router-dom';
 import '../../src/App.css';
 import {PeraWalletConnect} from "@perawallet/connect"
 import Logo from './logo.png'
+import './Main'
 import { useNavigate } from 'react-router-dom';
 
 
@@ -42,9 +43,8 @@ function Header() {
       setAccountAddress(accounts[0]);
       localStorage.setItem('accountAddress', accounts[0]);
       setShowAddress(true);
-      setTimeout(() => {
-        navigate('main', { replace: true });
-      }, 1000);
+      window.location.reload();
+     
     } catch (error) {
       if (error?.data?.type !== 'CONNECT_MODAL_CLOSED') {
         console.error(error);
@@ -57,6 +57,7 @@ function Header() {
     setAccountAddress(null);
     localStorage.removeItem('accountAddress');
     setShowAddress(false);
+    window.location.reload();
   };
     
   return (
