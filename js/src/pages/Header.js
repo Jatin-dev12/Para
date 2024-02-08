@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import Container from 'react-bootstrap/Container';
 import { Nav, Navbar, Button} from 'react-bootstrap';
+import { Route,Router,Routes } from 'react-router-dom';
 import '../../src/App.css';
 import {PeraWalletConnect} from "@perawallet/connect"
 import Logo from './logo.png'
 import { useNavigate } from 'react-router-dom';
+
 
 
 const peraWallet = new PeraWalletConnect({
@@ -13,39 +15,57 @@ const peraWallet = new PeraWalletConnect({
 
 
 function Header() {
+  
+  const [algoAmount, setAlgoAmount] = useState(0);
+  const [buyAmount, setBuyAmount] = useState(0);
+  const [showAddress, setShowAddress] = useState(false);
   const [accountAddress, setAccountAddress] = useState(null);
+  
   useEffect(() => {
+    const storedAccountAddress = localStorage.getItem('accountAddress');
+    if (storedAccountAddress) {
+      setAccountAddress(storedAccountAddress);
+      setShowAddress(true);
+    }
+
+    const getAccountData = async () => {
+      const algoBalance = await peraWallet.getAlgoBalance(storedAccountAddress);
+      const buyBalance = await peraWallet.getTokenBalance(storedAccountAddress, 'buy');
+      setAlgoAmount(algoBalance);
+      setBuyAmount(buyBalance);
+    };
+
+    if (accountAddress) {
+      getAccountData();
+    }
+
     return () => {
       peraWallet.connector?.off('disconnect', handleDisconnect);
     };
   }, []);
+
   const handleConnect = async () => {
     try {
       const accounts = await peraWallet.connect();
       peraWallet.connector?.on('disconnect', handleDisconnect);
       setAccountAddress(accounts[0]);
+      localStorage.setItem('accountAddress', accounts[0]);
+      setShowAddress(true);
     } catch (error) {
       if (error?.data?.type !== 'CONNECT_MODAL_CLOSED') {
         console.error(error);
       }
     }
   };
+
   const handleDisconnect = () => {
     peraWallet.disconnect();
     setAccountAddress(null);
-  };
-
-  const handleConnectWalletClick = () => {
-    if (accountAddress) {
-      handleDisconnect();
-    } else {
-      handleConnect();
-    }
+    localStorage.removeItem('accountAddress');
+    setShowAddress(false);
   };
     
   return (
-    
-    
     <Navbar bg="primary" data-bs-theme="dark">
     <Container fluid>
       
@@ -65,7 +85,8 @@ function Header() {
         <Nav className="justify-content-end">   
         <Nav.Link href="/">Home</Nav.Link>
         <Nav.Link href="/pera">Pera</Nav.Link>
-        <Button onClick={handleConnectWalletClick}  variant="light" >Connect Wallet</Button>
+        
+        <Button onClick={handleConnect}  variant="light" >Connect Wallet</Button>
           
        
 
@@ -75,8 +96,7 @@ function Header() {
             
     </Container>
   </Navbar>
-
-
+  
   );
 }
 

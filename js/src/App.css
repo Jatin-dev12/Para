@@ -105,6 +105,10 @@ p.box-shadow {
   border-radius: 5px;
 }
 
+.amount-label{
+  float: right;
+  margin: 5px;
+}
 
 
 

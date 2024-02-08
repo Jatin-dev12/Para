@@ -2,8 +2,7 @@ import React, { useState, useEffect } from 'react';
 import '../App.css';
 import { Row, Col ,Button, Container } from 'react-bootstrap';
 import {PeraWalletConnect} from "@perawallet/connect"
-import { useNavigate } from "react-router-dom";
-import Header from './Header'
+import Dow from './download.png'
 
 const peraWallet = new PeraWalletConnect({
   shouldShowSignTxnToast: false,
@@ -18,9 +17,10 @@ const Column = ({ children, width, jatin }) => {
 };
 
 const Main = () => {
-  const navigate = useNavigate();
-
+ 
   const [accountAddress, setAccountAddress] = useState(null);
+  const [buyAmount, setBuyAmount] = useState(0);
+  const [algoAmount, setAlgoAmount] = useState(0);
 
   useEffect(() => {
     const storedAccountAddress = localStorage.getItem('accountAddress');
@@ -39,6 +39,16 @@ const Main = () => {
       peraWallet.connector?.on('disconnect', handleDisconnect);
       setAccountAddress(accounts[0]);
       localStorage.setItem('accountAddress', accounts[0]);
+  
+      const assets = await peraWallet.getAssets();
+      const algoAsset = assets.find(asset => asset.name === "ALGO");
+      const algoBalance = await peraWallet.getAssetBalance(accounts, algoAsset.asset_id);
+      setAlgoAmount(algoBalance);
+  
+      const buyAsset = await peraWallet.getToken("buy"); // BUY token object
+      const buyBalance = await peraWallet.getAssetBalance(accounts, buyAsset.asset_id);
+      setBuyAmount(buyBalance);
+  
     } catch (error) {
       if (error?.data?.type !== 'CONNECT_MODAL_CLOSED') {
         console.error(error);
@@ -57,6 +67,7 @@ const Main = () => {
       handleDisconnect();
     } else {
       handleConnect();
+      
     }
   };
 
@@ -72,6 +83,10 @@ const Main = () => {
                   DISCONNECTS
                 </button>
               </span>
+              <span className="amount-label">BUY:{buyAmount}</span>
+              <span className="amount-label"> <img src={Dow}></img> Algo:{algoAmount}</span>
+        
+        
             </p>
           )}
 
@@ -111,6 +126,10 @@ const Main = () => {
 };
 
 export default Main;
+
+
+
+
 // import React, { useState, useEffect } from 'react';
 // import '../App.css';
 // import { Row, Col ,Button, Container } from 'react-bootstrap';
