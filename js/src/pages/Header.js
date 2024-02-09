@@ -80,6 +80,8 @@ function Header() {
         <Nav className="justify-content-end">   
         <Nav.Link href="/">Home</Nav.Link>
         <Nav.Link href="/pera">Pera</Nav.Link>
+        <Nav.Link href="/stake">stake</Nav.Link>
+
         
         <Button onClick={handleConnect}  variant="light" >Connect Wallet</Button>
           
