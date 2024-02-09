@@ -109,6 +109,28 @@ p.box-shadow {
   float: right;
   margin: 5px;
 }
+.modal-title {
+  color: aliceblue;
+}
+.modal-header{
+  background-color: #007bff;
+}
+
+.justify-content-center.modal-title.h4{
+  color: aliceblue;
+}
+input#exampleForm\.ControlInput1 {
+  padding: 10px;
+}
+label.form-label {
+  font-size: larger;
+ 
+}
+button.btn.btn-primary.btn-lg {
+  padding-right: 40px;
+  padding-left: 40px;
+}
+
 
 
 

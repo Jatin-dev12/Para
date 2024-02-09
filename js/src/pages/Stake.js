@@ -1,161 +1,80 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react';
+import { Card, Container, Row, Col } from 'react-bootstrap';
 
-function Stake() {
+const Stake = ({ stakeData }) => {
+  const [rewardsTimer, setRewardsTimer] = useState('');
+
+  useEffect(() => {
+    if (!stakeData) return;
+
+    const calculateRewardsTimer = () => {
+      const endTime = new Date(stakeData.rewardsEndTime);
+      const currentTime = new Date();
+      const differenceInSeconds = Math.floor((endTime - currentTime) / 1000);
+
+      if (differenceInSeconds >= 0) {
+        const days = Math.floor(differenceInSeconds / 86400);
+        const hours = Math.floor((differenceInSeconds % 86400) / 3600);
+        const minutes = Math.floor((differenceInSeconds % 3600) / 60);
+        const seconds = differenceInSeconds % 60;
+
+        setRewardsTimer(`${days} days ${hours} hours ${minutes} minutes ${seconds} seconds`);
+      } else {
+        setRewardsTimer('');
+      }
+    };
+
+    const timer = setInterval(calculateRewardsTimer, 1000);
+
+    // Clean up the interval on component unmount
+    return () => clearInterval(timer);
+  }, [stakeData?.rewardsEndTime]);
+
   return (
-    <div>
-      
-    </div>
-  )
-}
+    <Container>
+      <Card className="mt-5">
+        <Card.Body>
+          <Row>
+            <Col sm={6}>
+              <h5>My Stakes</h5>
+              <p>Amount Staked: {stakeData?.amountStaked || 0} BUY</p>
+            </Col>
+            <Col sm={6}>
+              <h5>Rewards Timer</h5>
+              <p>{rewardsTimer}</p>
+              <p>Remaining</p>
+            </Col>
+          </Row>
+          <Row>
+            <Col sm={6}>
+              <h5>Rewards Earned</h5>
+              <p>{stakeData?.rewardsEarned || 0} BUY</p>
+            </Col>
+            <Col sm={6}>
+              <h5>Total if Withdrawn</h5>
+              <p>{stakeData?.totalIfWithdrawn || 0}</p>
+            </Col>
+          </Row>
+          <Row>
+            <Col sm={6}>
+              <h5>Current Value</h5>
+              <p>${stakeData?.currentValue || 0}</p>
+            </Col>
+          </Row>
+          <Row>
+            <Col sm={12}>
+              <p className="text-muted">* Rewards visible after 30 days</p>
+            </Col>
+          </Row>
+          <Row>
+            <Col sm={12}>
+              <p className="text-muted">Initiated</p>
+            </Col>
+          </Row>
+        </Card.Body>
+      </Card>
+    </Container>
+  );
+};
 
-export default Stake
-
-
-// import React, { useState } from 'react';
-// import Button from 'react-bootstrap/Button';
-// import Form from 'react-bootstrap/Form';
-// import Modal from 'react-bootstrap/Modal';
-// import { useNavigate } from 'react-router-dom';
-
-// function Stake() {
-//   const [show, setShow] = useState(false);
-//   const [isContent1Visible, setIsContent1Visible] = useState(true);
-//   const navigate = useNavigate();
-
-//   const handleClose = () => setShow(false);
-
-//   const toggleContent = () => {
-//     setIsContent1Visible(!isContent1Visible);
-//   };
-
-//   return (
-//     <>
-//       <Button variant="primary" onClick={setShow}>
-//         Stake Bro Lets Make Money
-//       </Button>
-
-//       <Modal show={show} backdrop="static" animation={true}  onHide={handleClose}>
-//         <Modal.Header closeButton>
-//           <Modal.Title>Stake Buy Tokens</Modal.Title>
-//         </Modal.Header>
-//         <Modal.Body>
-//           <Form>
-//             <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
-//               <Form.Label>Buy Amount</Form.Label>
-//               <Form.Control
-//                 type="numeric"
-//                 placeholder="Amount"
-//                 autoFocus
-//               />
-//             </Form.Group>
-//           </Form>
-//         </Modal.Body>
-//         <Modal.Footer className='justify-content-center'>
-//           <Button variant="primary" onClick={() => setShow(false)}>
-//             Stake Now
-//           </Button>
-//         </Modal.Footer>
-//       </Modal>
-//       <div>
-//         <button onClick={toggleContent}>Toggle Content</button>
-//         {isContent1Visible && (
-//           <p>
-//             This is the first content section. It is initially visible and will be
-//             hidden when the button is clicked.
-//           </p>
-//         )}
-//         {!isContent1Visible && (
-  
-//         <Modal show={show} backdrop="static" onHide={handleClose}>
-//           <Modal.Header closeButton>
-//             <Modal.Title>Stake Buy Tokens</Modal.Title>
-//           </Modal.Header>
-//           <Modal.Body>
-//             <Form>
-//               <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
-//                 <Form.Label>Buy Amount</Form.Label>
-//                 <Form.Control
-//                   type="numeric"
-//                   placeholder="Amount"
-//                   autoFocus
-//                 />
-//               </Form.Group>
-//             </Form>
-//           </Modal.Body>
-//           <Modal.Footer className='justify-content-center'>
-//             <Button variant="primary" onClick={() => setShow(false)}>
-//               Stake Now
-//             </Button>
-//           </Modal.Footer>
-//         </Modal>
-//         )}
-//       </div>
-//     </>
-//   );
-// }
-
-// export default Stake;
-
-
-// // import React, { useState } from 'react';
-// // import Button from 'react-bootstrap/Button';
-// // import Form from 'react-bootstrap/Form';
-// // import Modal from 'react-bootstrap/Modal';
-
-// // function Stake() {
-// //   const [show, setShow] = useState(false);
-
-// //   const handleClose = () => setShow(false);
-// //   const [isContent1Visible, setIsContent1Visible] = useState(true);
-// //     const toggleContent = () => {
-// //         setIsContent1Visible(!isContent1Visible);
-// //       };
-
-// //   return (
-// //     <>
-// //       <Button variant="primary" onClick={() => setShow(true)}>
-// //         Stake Bro Lets Make Money
-// //       </Button>
-
-// //       <Modal show={show} backdrop="static" onHide={handleClose}>
-// //         <Modal.Header closeButton>
-// //           <Modal.Title>Stake Buy Tokens</Modal.Title>
-// //         </Modal.Header>
-// //         <Modal.Body>
-// //           <Form>
-// //             <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
-// //               <Form.Label>Buy Amount</Form.Label>
-// //               <Form.Control
-// //                 type="numeric"
-// //                 placeholder="Amount"
-// //                 autoFocus
-// //               />
-// //             </Form.Group>
-// //           </Form>
-// //         </Modal.Body>
-// //         <Modal.Footer className='justify-content-center'>
-// //           <Button variant="primary" onClick={() => setShow(false)}>
-// //             Stake Now
-// //           </Button>
-// //         </Modal.Footer>
-// //       </Modal>
-// //       <div>
-// //       <button onClick={toggleContent}>Toggle Content</button>
-// //       {isContent1Visible && (
-// //         <p>
-// //           This is the first content section. It is initially visible and will be
-// //           hidden when the button is clicked.
-// //         </p>
-// //       )}
-// //       {!isContent1Visible && (
-// //         <p>
-// //           This is the second content section. It is initially hidden and will be
-// //           shown when the button is clicked.
-// //         </p>
-// //       )}
-// //     </div>
-// //     </>
-// //   );
-// // }
-
-// // export default Stake;
+export default Stake ;

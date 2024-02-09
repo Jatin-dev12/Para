@@ -5,6 +5,7 @@ import {PeraWalletConnect} from "@perawallet/connect"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faWallet } from '@fortawesome/free-solid-svg-icons'
 import Dow from './download.png'
+import { useNavigate } from 'react-router-dom';
 
 
 const peraWallet = new PeraWalletConnect({
@@ -19,10 +20,11 @@ const Column = ({ children, width, jatin }) => {
   );
 };
 const Main = () => {
+  const navigate = useNavigate();
   const [accountAddress, setAccountAddress] = useState(null);
   const [isConnected, setIsConnected] = useState(false);
-  const [buyAmount, setBuyAmount] = useState(0);
-  const [algoAmount, setAlgoAmount] = useState(0);
+  const [buyAmount, setBuyAmount] = useState(2);
+  const [algoAmount, setAlgoAmount] = useState(2);
   const [error, setError] = useState();
 
   useEffect(() => {
@@ -53,6 +55,8 @@ const Main = () => {
       peraWallet.connector?.off("disconnect", handleDisconnect);
       setAccountAddress(accounts[0]);
       localStorage.setItem("accountAddress", accounts[0]);
+      navigate("/pera"); // Navigate to the pera page
+
       console.log(accounts)
 
       const assets = await peraWallet.getAssets();
@@ -117,7 +121,7 @@ const Main = () => {
               </Col>
               <Col sm></Col>
               <Col sm>
-                <Button onClick={handleWallet} size="lg" className="chk">
+                <Button onClick={handleConnectWalletClick} size="lg" className="chk">
                   Stake Now
                 </Button>
               </Col>
