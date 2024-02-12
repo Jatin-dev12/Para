@@ -6,6 +6,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faWallet } from '@fortawesome/free-solid-svg-icons'
 import Dow from './download.png'
 import Stake from './Stake';
+import {Transaction} from "algosdk";
+
 
 
 const peraWallet = new PeraWalletConnect({
@@ -20,16 +22,21 @@ const Column = ({ children, width, jatin }) => {
   );
 };
 const Pera = () => {
+
   const [accountAddress, setAccountAddress] = useState(null);
   const [isConnected, setIsConnected] = useState(false);
   const [buyAmount, setBuyAmount] = useState(2);
   const [algoAmount, setAlgoAmount] = useState(2);
   const [error, setError] = useState();
   // ---------------This for popup--------------------//
+
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
 
-  // ------------------------------------------------//
+  // --------------This thing is for staking----------//
+
+  
+
 
 
   useEffect(() => {
