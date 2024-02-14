@@ -81,6 +81,8 @@ function Header() {
         <Nav.Link href="/">Home</Nav.Link>
         <Nav.Link href="/pera">Pera</Nav.Link>
         <Nav.Link href="/stake">stake</Nav.Link>
+        <Nav.Link href="/trans">Trans</Nav.Link>
+
 
         
         <Button onClick={handleConnect}  variant="light" >Connect Wallet</Button>

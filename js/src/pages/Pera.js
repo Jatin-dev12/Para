@@ -6,13 +6,18 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faWallet } from '@fortawesome/free-solid-svg-icons'
 import Dow from './download.png'
 import Stake from './Stake';
-import {Transaction} from "algosdk";
+import algosdk from 'algosdk';
+import isValidAddress  from "@randlabs/myalgo-connect";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 
 
 
 const peraWallet = new PeraWalletConnect({
   shouldShowSignTxnToast: false,
   AlgorandChainIDs: "416001 , 416002"
+  
 });
 const Column = ({ children, width, jatin }) => {
   return (
@@ -22,7 +27,6 @@ const Column = ({ children, width, jatin }) => {
   );
 };
 const Pera = () => {
-
   const [accountAddress, setAccountAddress] = useState(null);
   const [isConnected, setIsConnected] = useState(false);
   const [buyAmount, setBuyAmount] = useState(2);
@@ -32,11 +36,31 @@ const Pera = () => {
 
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
+  const toastError = () => toast.error('This is Toast Notification for Error');
+
 
   // --------------This thing is for staking----------//
 
-  
+  const [algoBalance, setAlgoBalance] = useState(0);
+  const [buyTokenBalance, setBuyTokenBalance] = useState(0);
+  const [staked, setStaked] = useState(0);
+  const [rewards, setRewards] = useState(0);
+  const [total, setTotal] = useState(0);
+  const [totalValue, setTotalValue] = useState(0);
+  const [amount, setAmount] = useState('');
 
+  const handleShow = () => setShow(true);
+  const handleConnect = (error, payload) => {
+    if (error) {
+      throw error;
+    }
+
+    const { accounts } = payload.params[0];
+    setAccountAddress(accounts[0]);
+    setIsConnected(true);
+  };
+  
+  
 
 
   useEffect(() => {
@@ -92,8 +116,66 @@ const Pera = () => {
     setAccountAddress(null);
     setIsConnected(false);
     localStorage.removeItem('accountAddress');
-  };
 
+    setAccountAddress('');
+    setAlgoBalance(0);
+    setBuyTokenBalance(0);
+    setStaked(0);
+    setRewards(0);
+    setTotal(0);
+    setTotalValue(0);
+  };
+  const handleStake = async (amount: Number) => {
+    if (isConnected) {
+      alert('Please connect your Pera Wallet');
+      return;
+    }
+
+    if (!amount || amount <= 0) {
+      alert('Please enter a valid amount');
+      return;
+    }
+
+    const algodClient = new algosdk.Algodv2(
+      { 'X-API-Key': 'YOUR_API_KEY' },
+      'https://testnet-algorand.api.purestake.io/ps2',
+      'testnet'
+    );
+
+    const params = await algodClient.getTransactionParams().do();
+    const fromAddress = accountAddress;
+    const toAddress = 'ICKZ26QPEM7MXT6VDUKRAOHLTG4AMMD3FHDR7IGDKRAMN6IN7CHTYEWOY4';
+    const assetId = 137020565; // Replace with your asset ID
+    const decimals = 0; // Replace with your asset decimals
+
+    const amountToSend = Math.floor(amount * Math.pow(10, decimals));
+
+    const note = new Uint8Array(0);
+
+    const txn = algosdk.makeAssetTransferTxnWithSuggestedParamsFromObject({
+      from: fromAddress,
+      to: toAddress,
+      amount: amountToSend,
+      assetIndex: assetId,
+      suggestedParams: params,
+      note,
+    });
+
+    const signedTxn = await algosdk.signDigest(txn.toBuffer(), 'YOUR_PRIVATE_KEY');
+
+    try {
+      const txResponse = await algodClient.sendRawTransaction(signedTxn).do();
+      console.log('Transaction ID:', txResponse.txId);
+
+      setStaked(staked + amount);
+      setTotal(total + amount);
+
+      alert('Staking successful');
+    } catch (error) {
+      console.error('Error:', error);
+      alert('Staking failed');
+    }
+  };
   const handleConnectWalletClick = () => {
     if (isConnected) {
       handleDisconnect();
@@ -131,19 +213,21 @@ const Pera = () => {
               </Col>
               <Col sm></Col>
               <Col sm>
-                <Button onClick={setShow} size="lg" className="chk">
+                <Button onClick={handleShow} size="lg" className="chk">
                   Stake Now
                 </Button>
+                
                 <Modal show={show}  className='justify-content-center' backdrop="static" animation={true}  onHide={handleClose}>
         <Modal.Header closeButton>
           <Modal.Title className='justify-content-center'>Stake Buy Tokens</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <Form>
-            <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
-              <Form.Label>Balance</Form.Label>
+            <Form.Group className="mb-3" controlId="ControlInput1">
+              <Form.Label>Balance: 2 BUY</Form.Label>
               
               <Form.Control
+              className='ja'
                 type="numeric"
                 placeholder="Enter Amount"
                 autoFocus
@@ -152,7 +236,7 @@ const Pera = () => {
           </Form>
         </Modal.Body>
         <Modal.Footer className='justify-content-center'>
-          <Button variant="primary"  size="lg" onClick={() => setShow(false)}>
+        <Button variant="primary" onClick={() => handleStake(parseFloat(amount))}>
             Stake Now
           </Button>
         </Modal.Footer>
@@ -175,6 +259,17 @@ const Pera = () => {
         <Col>
           <h3 className="stake">My Stakes</h3>
         </Col>
+        <ToastContainer
+        position="top-left"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+      />
       </div>
     </>
   );

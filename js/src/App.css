@@ -132,6 +132,16 @@ button.btn.btn-primary.btn-lg {
   padding-left: 40px;
 }
 
+.ja.form-control{
+  width: 50%;
+  margin-left: 100px;
+  padding: 10px;
+}
+
+label.form-label {
+  text-align: center;
+  margin-left: 150px;
+}
 
 
 
