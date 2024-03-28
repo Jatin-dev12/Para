@@ -14,7 +14,7 @@ import Wallet  from './pages/Wallet';
 
 function App() {
   return (
-    <BrowserRouter >
+    <BrowserRouter basename='/staking' >
 
     <Routes>
 

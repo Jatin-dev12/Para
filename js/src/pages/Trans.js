@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Button, Modal, Form } from 'react-bootstrap';
 import { PeraWalletConnect } from "@perawallet/connect";
-import isValidAddress from "@randlabs/myalgo-connect";
 import algosdk from 'algosdk';
 
 const peraWallet = new PeraWalletConnect({

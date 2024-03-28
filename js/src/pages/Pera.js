@@ -4,10 +4,8 @@ import { Row, Col ,Button, Container , Form,Modal } from 'react-bootstrap';
 import {PeraWalletConnect} from "@perawallet/connect"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faWallet } from '@fortawesome/free-solid-svg-icons'
-import Dow from './download.png'
-import Stake from './Stake';
+import Dow from './download.png';
 import algosdk from 'algosdk';
-import isValidAddress  from "@randlabs/myalgo-connect";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -125,7 +123,7 @@ const Pera = () => {
     setTotal(0);
     setTotalValue(0);
   };
-  const handleStake = async (amount: Number) => {
+  const handleStake = async (amount) => {
     if (isConnected) {
       alert('Please connect your Pera Wallet');
       return;
@@ -146,7 +144,7 @@ const Pera = () => {
     const fromAddress = accountAddress;
     const toAddress = 'ICKZ26QPEM7MXT6VDUKRAOHLTG4AMMD3FHDR7IGDKRAMN6IN7CHTYEWOY4';
     const assetId = 137020565; // Replace with your asset ID
-    const decimals = 0; // Replace with your asset decimals
+    const decimals = 0o00000000; // Replace with your asset decimals
 
     const amountToSend = Math.floor(amount * Math.pow(10, decimals));
 
@@ -197,6 +195,7 @@ const Pera = () => {
                   DISCONNECTS
                 </button>
               </span>
+              
               <span className="amount-label">BUY:{buyAmount}</span>
               <span className="amount-label"> <img src={Dow}></img> Algo:{algoAmount}</span>
         
@@ -206,6 +205,7 @@ const Pera = () => {
 
           <h2 className="yup">Stake BUY Tokens</h2>
           <Container>
+            
             <Row>
               <Col sm>
                 <h3>Participating Pool</h3>
@@ -271,6 +271,7 @@ const Pera = () => {
         pauseOnHover
       />
       </div>
+     
     </>
   );
 };
